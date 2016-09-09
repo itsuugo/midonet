@@ -4,7 +4,6 @@ jdk:
   - oraclejdk8
 install: 
   - git fetch --tags
-  - git describe --tags
 after_success:
   - ./gradlew test
   - gradle jacocoTestReport
