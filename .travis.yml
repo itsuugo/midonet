@@ -6,5 +6,5 @@ install:
   - git fetch --tags
   - git describe --tags
 after_success:
-	- ./gradlew test
+  - ./gradlew test
   - gradle jacocoTestReport
