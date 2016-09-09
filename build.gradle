@@ -189,10 +189,18 @@ buildscript {
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.8'
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.6'
         classpath "com.github.nullstress:DependencyAnalysisPlugin:1.0.3"
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
 
 allprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = '0.7.1.201405082137'
+    }
+
     apply plugin: 'idea'
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: "dependencyAnalysis"
@@ -238,6 +246,19 @@ allprojects {
         inheritOutputDirs = false
         outputDir = file("${rootDir}/idea/out/${project.name}")
         testOutputDir = file("${rootDir}/idea/test/${project.name}")
+    }
+}
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn = subprojects.test
+    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
     }
 }
 
@@ -332,6 +353,17 @@ configure(subprojects.findAll {!it.name.contains('ovsdb')}) {
             module("asm:asm") {
                 replacedBy("org.ow2.asm:asm")
             }
+        }
+    }
+
+    jacocoTestReport {
+        additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+        sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+        classDirectories =  files(sourceSets.main.output)
+        reports {
+            html.enabled = true
+            xml.enabled = true
+            csv.enabled = false
         }
     }
 
