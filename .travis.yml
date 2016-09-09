@@ -1,9 +1,10 @@
 sudo: required
 language: java
+dist: trusty
 jdk:
   - oraclejdk8
 install: 
   - git fetch --tags
 after_success:
-  - ./gradlew test
-  - gradle jacocoTestReport
+  - sudo ./gradlew test
+  - sudo gradle jacocoTestReport
