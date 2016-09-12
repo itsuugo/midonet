@@ -3,6 +3,10 @@ language: java
 dist: trusty
 jdk:
   - oraclejdk8
+before_install:
+  - curl -L https://builds.midonet.org/midorepo.key | sudo apt-key add -
+  - echo "deb http://builds.midonet.org/misc stable main" | sudo tee -a /etc/apt/sources.list
+  - sudo apt-get update -qq
 install: 
   - git fetch --tags
 after_success:
